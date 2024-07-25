@@ -1,0 +1,33 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "048c5efae72bf1a222682126a2970593"
+name = "GTM-Extension-App"
+handle = "gtm-extension-app"
+application_url = "https://suggestions-photography-justify-latter.trycloudflare.com"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "checkout-extensibility-test-store-dr.myshopify.com"
+include_config_on_deploy = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_pixels,read_customer_events"
+
+[auth]
+redirect_urls = [
+  "https://suggestions-photography-justify-latter.trycloudflare.com/auth/callback",
+  "https://suggestions-photography-justify-latter.trycloudflare.com/auth/shopify/callback",
+  "https://suggestions-photography-justify-latter.trycloudflare.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-07"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks"
+
+[pos]
+embedded = false

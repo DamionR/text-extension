@@ -1,0 +1,140 @@
+type = "web_pixel_extension"
+name = "my-web-pixel"
+runtime_context = "strict"
+
+[customer_privacy]
+analytics = true
+marketing = true
+preferences = false
+sale_of_data = "enabled"
+
+[settings]
+type = "object"
+
+[settings.fields.accountID]
+name = "Account ID"
+description = "Your account ID for tracking"
+type = "single_line_text_field"
+validations = [
+   { name = "min", value = "1" }
+]
+
+[settings.fields.pageViewsEnabled]
+name = "Enable Page Views Tracking"
+description = "Set to true to enable tracking for page views."
+type = "single_line_text_field"
+validations = [
+   { name = "one_of", values = ["true", "false"] }
+]
+
+[settings.fields.productViewsEnabled]
+name = "Enable Product Views Tracking"
+description = "Set to true to enable tracking for product views."
+type = "single_line_text_field"
+validations = [
+   { name = "one_of", values = ["true", "false"] }
+]
+
+[settings.fields.purchasesEnabled]
+name = "Enable Purchases Tracking"
+description = "Set to true to enable tracking for purchases."
+type = "single_line_text_field"
+validations = [
+   { name = "one_of", values = ["true", "false"] }
+]
+
+[settings.fields.cartViewedEnabled]
+name = "Enable Cart Viewed Tracking"
+description = "Set to true to enable tracking for cart views."
+type = "single_line_text_field"
+validations = [
+   { name = "one_of", values = ["true", "false"] }
+]
+
+[settings.fields.checkoutAddressInfoSubmittedEnabled]
+name = "Enable Checkout Address Info Submitted Tracking"
+description = "Set to true to enable tracking for checkout address info submissions."
+type = "single_line_text_field"
+validations = [
+   { name = "one_of", values = ["true", "false"] }
+]
+
+[settings.fields.checkoutCompletedEnabled]
+name = "Enable Checkout Completed Tracking"
+description = "Set to true to enable tracking for completed checkouts."
+type = "single_line_text_field"
+validations = [
+   { name = "one_of", values = ["true", "false"] }
+]
+
+[settings.fields.checkoutContactInfoSubmittedEnabled]
+name = "Enable Checkout Contact Info Submitted Tracking"
+description = "Set to true to enable tracking for checkout contact info submissions."
+type = "single_line_text_field"
+validations = [
+   { name = "one_of", values = ["true", "false"] }
+]
+
+[settings.fields.checkoutShippingInfoSubmittedEnabled]
+name = "Enable Checkout Shipping Info Submitted Tracking"
+description = "Set to true to enable tracking for checkout shipping info submissions."
+type = "single_line_text_field"
+validations = [
+   { name = "one_of", values = ["true", "false"] }
+]
+
+[settings.fields.checkoutStartedEnabled]
+name = "Enable Checkout Started Tracking"
+description = "Set to true to enable tracking when checkout starts."
+type = "single_line_text_field"
+validations = [
+   { name = "one_of", values = ["true", "false"] }
+]
+
+[settings.fields.collectionViewedEnabled]
+name = "Enable Collection Viewed Tracking"
+description = "Set to true to enable tracking for collection views."
+type = "single_line_text_field"
+validations = [
+   { name = "one_of", values = ["true", "false"] }
+]
+
+[settings.fields.paymentInfoSubmittedEnabled]
+name = "Enable Payment Info Submitted Tracking"
+description = "Set to true to enable tracking for payment info submissions."
+type = "single_line_text_field"
+validations = [
+   { name = "one_of", values = ["true", "false"] }
+]
+
+[settings.fields.productAddedToCartEnabled]
+name = "Enable Product Added to Cart Tracking"
+description = "Set to true to enable tracking for products added to the cart."
+type = "single_line_text_field"
+validations = [
+   { name = "one_of", values = ["true", "false"] }
+]
+
+[settings.fields.productRemovedFromCartEnabled]
+name = "Enable Product Removed from Cart Tracking"
+description = "Set to true to enable tracking for products removed from the cart."
+type = "single_line_text_field"
+validations = [
+   { name = "one_of", values = ["true", "false"] }
+]
+
+[settings.fields.productViewedEnabled]
+name = "Enable Product Viewed Tracking"
+description = "Set to true to enable tracking for products viewed."
+type = "single_line_text_field"
+validations = [
+   { name = "one_of", values = ["true", "false"] }
+]
+
+[settings.fields.searchSubmittedEnabled]
+name = "Enable Search Submitted Tracking"
+description = "Set to true to enable tracking for submitted searches."
+type = "single_line_text_field"
+validations = [
+   { name = "one_of", values = ["true", "false"] }
+]
