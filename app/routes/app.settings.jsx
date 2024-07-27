@@ -1,43 +1,45 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   Page,
   Layout,
   Card,
   TextField,
-  Checkbox,
   Banner,
   Button,
   ChoiceList,
 } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
-import { useLoaderData } from "@remix-run/react"; // Import useLoaderData
+import { useLoaderData } from "@remix-run/react";
+import { json } from "@remix-run/node";
+import { authenticate } from "../shopify.server";
+
+export const loader = async ({ request }) => {
+  await authenticate.admin(request);
+  return json({ apiKey: process.env.SHOPIFY_API_KEY || "" });
+};
 
 export default function SettingsPage() {
-  const settings = useLoaderData(); // Get settings from the loader
-
-  const gtmIdInitial = settings?.accountID || "GTM-XXXXXX"; // Use optional chaining
-  const [gtmId, setGtmId] = useState(gtmIdInitial); // Define gtmId state
+  const { apiKey } = useLoaderData();
+  const [gtmId, setGtmId] = useState("GTM-DUMMY-ID");
   const [feedbackMessage, setFeedbackMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [events, setEvents] = useState({
-    pageViews: settings?.pageViewsEnabled === 'true',
-    productViews: settings?.productViewsEnabled === 'true',
-    purchases: settings?.purchasesEnabled === 'true',
-    cartViewed: settings?.cartViewedEnabled === 'true',
-    checkoutAddressInfoSubmitted: settings?.checkoutAddressInfoSubmittedEnabled === 'true',
-    checkoutCompleted: settings?.checkoutCompletedEnabled === 'true',
-    checkoutContactInfoSubmitted: settings?.checkoutContactInfoSubmittedEnabled === 'true',
-    checkoutShippingInfoSubmitted: settings?.checkoutShippingInfoSubmittedEnabled === 'true',
-    checkoutStarted: settings?.checkoutStartedEnabled === 'true',
-    collectionViewed: settings?.collectionViewedEnabled === 'true',
-    paymentInfoSubmitted: settings?.paymentInfoSubmittedEnabled === 'true',
-    productAddedToCart: settings?.productAddedToCartEnabled === 'true',
-    productRemovedFromCart: settings?.productRemovedFromCartEnabled === 'true',
-    productViewed: settings?.productViewedEnabled === 'true',
-    searchSubmitted: settings?.searchSubmittedEnabled === 'true',
+    pageViews: false,
+    productViews: false,
+    purchases: false,
+    cartViewed: false,
+    checkoutAddressInfoSubmitted: false,
+    checkoutCompleted: false,
+    checkoutContactInfoSubmitted: false,
+    checkoutShippingInfoSubmitted: false,
+    checkoutStarted: false,
+    collectionViewed: false,
+    paymentInfoSubmitted: false,
+    productAddedToCart: false,
+    productRemovedFromCart: false,
+    productViewed: false,
+    searchSubmitted: false,
   });
-  const [webpixelEnabled, setWebpixelEnabled] = useState(settings?.webpixelEnabled === 'true');
-  const [selectedEventKeys, setSelectedEventKeys] = useState([]);
 
   const eventChoices = [
     { label: "Page Views", value: "pageViews" },
@@ -60,8 +62,7 @@ export default function SettingsPage() {
   const validateGtmId = (id) => /^GTM-[A-Z0-9]+$/.test(id);
 
   const handleSave = async (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
-    console.log("Save button clicked"); // Debugging log
+    event.preventDefault();
     setLoading(true);
 
     if (!validateGtmId(gtmId)) {
@@ -72,14 +73,25 @@ export default function SettingsPage() {
 
     const updatedSettings = {
       accountID: gtmId,
-      webpixelEnabled: webpixelEnabled.toString(),
-      ...events,
+      pageViewsEnabled: events.pageViews.toString(),
+      productViewsEnabled: events.productViews.toString(),
+      purchasesEnabled: events.purchases.toString(),
+      cartViewedEnabled: events.cartViewed.toString(),
+      checkoutAddressInfoSubmittedEnabled: events.checkoutAddressInfoSubmitted.toString(),
+      checkoutCompletedEnabled: events.checkoutCompleted.toString(),
+      checkoutContactInfoSubmittedEnabled: events.checkoutContactInfoSubmitted.toString(),
+      checkoutShippingInfoSubmittedEnabled: events.checkoutShippingInfoSubmitted.toString(),
+      checkoutStartedEnabled: events.checkoutStarted.toString(),
+      collectionViewedEnabled: events.collectionViewed.toString(),
+      paymentInfoSubmittedEnabled: events.paymentInfoSubmitted.toString(),
+      productAddedToCartEnabled: events.productAddedToCart.toString(),
+      productRemovedFromCartEnabled: events.productRemovedFromCart.toString(),
+      productViewedEnabled: events.productViewed.toString(),
+      searchSubmittedEnabled: events.searchSubmitted.toString(),
     };
 
-    console.log("Updated settings:", updatedSettings); // Log the settings being sent
-
     try {
-      const response = await fetch(`/api/webPixelUpdate`, {
+      const response = await fetch(`/api/updateWebPixel`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,34 +100,25 @@ export default function SettingsPage() {
       });
 
       const result = await response.json();
-      console.log("Response from server:", result); // Log the server response
-
-      if (result.errors) {
-        setFeedbackMessage({ type: "error", content: result.errors[0].message });
-      } else {
+      if (response.ok) {
         setFeedbackMessage({ type: "success", content: "Settings saved successfully!" });
+      } else {
+        setFeedbackMessage({ type: "error", content: result.errors[0].message });
       }
     } catch (error) {
       console.error("Error saving settings:", error);
       setFeedbackMessage({ type: "error", content: "An error occurred while saving settings." });
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 
   const handleEventsChange = useCallback((value) => {
-    setSelectedEventKeys(value);
     const updatedEvents = { ...events };
-
     Object.keys(updatedEvents).forEach((key) => {
-      updatedEvents[key] = false; // Reset all events to false
+      updatedEvents[key] = value.includes(key);
     });
-
-    value.forEach(key => {
-      updatedEvents[key] = true; // Enable selected events
-    });
-
-    setEvents(updatedEvents); // Update the events state
+    setEvents(updatedEvents);
   }, [events]);
 
   return (
@@ -128,21 +131,13 @@ export default function SettingsPage() {
               {feedbackMessage.content}
             </Banner>
           )}
-          <form onSubmit={handleSave}> {/* Added form element */}
+          <form onSubmit={handleSave}>
             <Card sectioned title="Google Tag Manager" style={{ marginBottom: '20px' }}>
               <TextField
                 label="GTM ID"
                 value={gtmId}
-                onChange={setGtmId} // Ensure setGtmId is defined
+                onChange={setGtmId}
                 placeholder="Enter your GTM ID"
-              />
-            </Card>
-            <br />
-            <Card sectioned title="Webpixel Extension" style={{ marginBottom: '20px' }}>
-              <Checkbox
-                label="Enable Webpixel Extension"
-                checked={webpixelEnabled}
-                onChange={setWebpixelEnabled}
               />
             </Card>
             <br />
@@ -154,18 +149,18 @@ export default function SettingsPage() {
                 title="Select Events"
                 titleHidden
                 choices={eventChoices}
-                selected={selectedEventKeys}
+                selected={Object.keys(events).filter((key) => events[key])}
                 onChange={handleEventsChange}
                 allowMultiple
               />
             </Card>
             <Button
-              type="submit" // Ensure the button is of type submit
+              type="submit"
               disabled={!gtmId || !validateGtmId(gtmId) || loading}
-              loading={loading} // Show loading state
-              primary // Use primary variant for the button
-              fullWidth // Optional: Makes the button full-width
-              size="large" // Optional: Sets the button size to large
+              loading={loading}
+              primary
+              fullWidth
+              size="large"
             >
               Save Settings
             </Button>

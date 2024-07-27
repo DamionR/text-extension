@@ -3,7 +3,7 @@
 client_id = "048c5efae72bf1a222682126a2970593"
 name = "GTM-Extension-App"
 handle = "gtm-extension-app"
-application_url = "https://suggestions-photography-justify-latter.trycloudflare.com"
+application_url = "https://prophet-extraordinary-testimony-concept.trycloudflare.com"
 embedded = true
 
 [build]
@@ -13,13 +13,13 @@ include_config_on_deploy = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_pixels,read_customer_events"
+scopes = "read_customer_events,read_customers,read_pixels,write_pixels"
 
 [auth]
 redirect_urls = [
-  "https://suggestions-photography-justify-latter.trycloudflare.com/auth/callback",
-  "https://suggestions-photography-justify-latter.trycloudflare.com/auth/shopify/callback",
-  "https://suggestions-photography-justify-latter.trycloudflare.com/api/auth/callback"
+  "https://prophet-extraordinary-testimony-concept.trycloudflare.com/auth/callback",
+  "https://prophet-extraordinary-testimony-concept.trycloudflare.com/auth/shopify/callback",
+  "https://prophet-extraordinary-testimony-concept.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
