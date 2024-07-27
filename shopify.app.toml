@@ -3,7 +3,7 @@
 client_id = "048c5efae72bf1a222682126a2970593"
 name = "GTM-Extension-App"
 handle = "gtm-extension-app"
-application_url = "https://prophet-extraordinary-testimony-concept.trycloudflare.com"
+application_url = "https://venice-crisis-operate-symphony.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "read_customer_events,read_customers,read_pixels,write_pixels"
 
 [auth]
 redirect_urls = [
-  "https://prophet-extraordinary-testimony-concept.trycloudflare.com/auth/callback",
-  "https://prophet-extraordinary-testimony-concept.trycloudflare.com/auth/shopify/callback",
-  "https://prophet-extraordinary-testimony-concept.trycloudflare.com/api/auth/callback"
+  "https://venice-crisis-operate-symphony.trycloudflare.com/auth/callback",
+  "https://venice-crisis-operate-symphony.trycloudflare.com/auth/shopify/callback",
+  "https://venice-crisis-operate-symphony.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
